@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,11 +14,11 @@ model Book {
   id          Int       @id   @default(autoincrement())
   book_id     String    @default(uuid())
   name        String    @db.VarChar(255)
-  year        Int       @db.UnsignedInt
+  year        Int       @db.Integer
   author      String    @db.VarChar(255)
   summary     String    @db.VarChar(255)
   publisher   String    @db.VarChar(255)
-  page_count  Int       @db.UnsignedInt
+  page_count  Int       @db.Integer
   created_at  DateTime  @default(now())
   updated_at  DateTime  
 
