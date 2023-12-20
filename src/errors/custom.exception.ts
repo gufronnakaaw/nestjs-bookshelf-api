@@ -35,6 +35,19 @@ export class CustomException {
       );
     }
 
+    if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+      return new HttpException(
+        {
+          success: false,
+          errors: {
+            message: error.message,
+            client_version: error.clientVersion,
+          },
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     if (error instanceof CustomError) {
       return new HttpException(
         {
@@ -53,7 +66,8 @@ export class CustomException {
       {
         success: false,
         errors: {
-          message: error.message,
+          message: 'SERVER IS DOWN',
+          log: error.message,
         },
       },
       HttpStatus.INTERNAL_SERVER_ERROR,

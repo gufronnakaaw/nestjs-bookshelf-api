@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDTO } from './books.dto';
-import { CustomException } from '../custom.exception';
+import { CustomException } from 'src/errors/custom.exception';
 
 @Controller('books')
 export class BooksController {

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/database/prisma.service';
 import {
   CreateBookDTO,
   ResponseCreateBookDTO,
   ResponseGetBooksDTO,
 } from './books.dto';
 import { CreateBookValidation } from './books.validation';
-import { ZodValidate } from 'src/zod.validate';
-import { CustomError } from 'src/custom.error';
+import { ZodValidate } from 'src/utils/zod.validate';
+import { CustomError } from 'src/errors/custom.error';
 
 @Injectable()
 export class BooksService {
