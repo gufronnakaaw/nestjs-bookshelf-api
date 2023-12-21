@@ -8,3 +8,7 @@ export const CreateBookValidation = z.object({
   publisher: z.string().trim().min(1),
   page_count: z.number().positive(),
 });
+
+export const DeleteBookValidation = z.object({
+  book_id: z.string().trim().min(1),
+});

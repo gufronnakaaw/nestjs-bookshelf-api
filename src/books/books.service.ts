@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import {
   CreateBookDTO,
+  DeleteBookDTO,
   ResponseCreateBookDTO,
   ResponseGetBooksDTO,
 } from './books.dto';
-import { CreateBookValidation } from './books.validation';
+import { CreateBookValidation, DeleteBookValidation } from './books.validation';
 import { ZodValidate } from 'src/utils/zod.validate';
 import { CustomError } from 'src/errors/custom.error';
 
@@ -57,12 +58,12 @@ export class BooksService {
     };
   }
 
-  getBooks(page: number = 1): Promise<ResponseGetBooksDTO[]> {
+  async getBooks(page: number = 1): Promise<ResponseGetBooksDTO> {
     const size: number = 10;
 
     const skip = page != 0 ? (page - 1) * size : (1 - 1) * size;
 
-    return this.prisma.book.findMany({
+    const data = await this.prisma.book.findMany({
       select: {
         book_id: true,
         name: true,
@@ -75,6 +76,39 @@ export class BooksService {
       },
       take: size,
       skip,
+    });
+
+    const total = await this.prisma.book.count();
+
+    return {
+      data,
+      page,
+      total_page: Math.ceil(total / size),
+      total_item: total,
+    };
+  }
+
+  async deleteBook(data: DeleteBookDTO) {
+    const { book_id } = ZodValidate(DeleteBookValidation, data);
+
+    const book = await this.prisma.book.findFirst({
+      where: {
+        book_id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!book) {
+      throw new CustomError(404, 'book not found');
+    }
+
+    await this.prisma.book.delete({
+      where: {
+        id: book.id,
+        book_id,
+      },
     });
   }
 }
